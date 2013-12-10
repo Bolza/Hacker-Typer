@@ -1,6 +1,9 @@
 /*
-*(c) Copyright 2011 Simone Masiero. Some Rights Reserved. 
-*This work is licensed under a Creative Commons Attribution-Noncommercial-Share Alike 3.0 License
+*	(c) Copyright 2011 Simone Masiero. Some Rights Reserved. 
+*	This work is licensed under a Creative Commons Attribution-Noncommercial-Share Alike 3.0 License
+*	
+*	Creator: Simone Masiero
+*	Last Modify: Stefano Sergio (Bolza @ github)
 */
 
 $(
@@ -62,19 +65,15 @@ var Typer={
 	},
 	
 	addText:function(key){//Main function to add the code
-		if(key.keyCode==18){// key 18 = alt key
-			Typer.accessCount++; //increase counter 
-			if(Typer.accessCount>=3){// if it's presed 3 times
-				Typer.makeAccess(); // make access popup
-			}
-		}else if(key.keyCode==20){// key 20 = caps lock
-			Typer.deniedCount++; // increase counter
-			if(Typer.deniedCount>=3){ // if it's pressed 3 times
-				Typer.makeDenied(); // make denied popup
-			}
-		}else if(key.keyCode==27){ // key 27 = esc key
-			Typer.hidepop(); // hide all popups
-		}else if(Typer.text){ // otherway if text is loaded
+		//ctrl, alt, esc, F5, F12, F11, CAPS
+		if (key.keyCode==18 || key.keyCode==20 || key.keyCode==27 || key.keyCode==122 || 
+			key.keyCode==123  || key.keyCode==116 || key.keyCode==17 ) return;
+
+		if (key.altKey && key.keyCode==13) Typer.makeAccess();	
+		else if(key.ctrlKey && key.keyCode==13) Typer.makeDenied();
+		else if(Typer.text){ // otherway if text is loaded
+			
+			Typer.hidepop();
 			var cont=Typer.content(); // get the console content
 			if(cont.substring(cont.length-1,cont.length)=="|") // if the last char is the blinking cursor
 				$("#console").html($("#console").html().substring(0,cont.length-1)); // remove it before adding the text
@@ -91,12 +90,7 @@ var Typer={
 			$("#console").html(text.replace(rtn,"<br/>").replace(rtt,"&nbsp;&nbsp;&nbsp;&nbsp;").replace(rts,"&nbsp;"));// replace newline chars with br, tabs with 4 space and blanks with an html blank
 			window.scrollBy(0,50); // scroll to make sure bottom is always visible
 		}
-		if ( key.preventDefault && key.keyCode != 122 ) { // prevent F11(fullscreen) from being blocked
-			key.preventDefault()
-		};  
-		if(key.keyCode != 122){ // otherway prevent keys default behavior
-			key.returnValue = false;
-		}
+		if ( key.preventDefault ) key.preventDefault();
 	},
 	
 	updLstChr:function(){ // blinking cursor
